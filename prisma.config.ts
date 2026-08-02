@@ -5,7 +5,14 @@ import { defineConfig } from "prisma/config";
 
 // Next.js loads .env.local automatically, while Prisma CLI does not.
 // Load it here so db:push, db:migrate, and db:seed use the same database.
-process.loadEnvFile(".env.local");
+// Hosting platforms (Vercel, Render) inject env vars directly and do not
+// provide a .env.local file, so guard against its absence to keep installs
+// and deploys working there.
+try {
+  process.loadEnvFile(".env.local");
+} catch {
+  // .env.local not present — rely on already-set environment variables instead.
+}
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
