@@ -1,23 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans, Geist } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-jakarta",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "UrbanVerse AI — Urban Decision Intelligence Platform",
@@ -46,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn(inter.variable, plusJakarta.variable, "font-sans", geist.variable)}>
-      <body className="font-inter antialiased">
+    <html lang="en">
+      <body className="font-sans antialiased">
         <AuthProvider>
           {children}
           <Toaster

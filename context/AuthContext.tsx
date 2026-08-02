@@ -62,6 +62,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return () => window.clearTimeout(timer);
     }
 
+    if (!auth) {
+      const timer = window.setTimeout(() => setLoading(false), 0);
+      return () => window.clearTimeout(timer);
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
@@ -88,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     window.localStorage.removeItem(DEMO_SESSION_KEY);
     setUser(null);
-    await signOut(auth).catch(() => undefined);
+    if (auth) await signOut(auth).catch(() => undefined);
     router.push("/login");
   };
 

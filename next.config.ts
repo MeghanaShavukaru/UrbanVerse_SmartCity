@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Keep Vercel's deployment trace inside this repository even when a parent
+  // folder happens to contain another package-lock.json.
+  outputFileTracingRoot: process.cwd(),
+
   // Transpile Leaflet for Next.js
   transpilePackages: ["leaflet"],
 
@@ -13,7 +17,7 @@ const nextConfig: NextConfig = {
   },
 
   // Ensure server-only packages don't get bundled client-side
-  serverExternalPackages: ["@prisma/client", "prisma"],
+  serverExternalPackages: ["@prisma/client", "prisma", "@prisma/adapter-pg", "pg"],
 
   webpack(config) {
     // Leaflet uses browser globals — no canvas on server
