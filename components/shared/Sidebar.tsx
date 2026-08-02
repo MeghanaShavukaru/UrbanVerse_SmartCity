@@ -18,6 +18,7 @@ import {
   Compass,
   BrainCircuit,
   CalendarRange,
+  Building2,
   Sparkles,
   Settings,
   LogOut,
@@ -34,6 +35,7 @@ const navItems = [
   { href: "/dashboard/demo-guide", icon: Compass, label: "Demo Guide" },
   { href: "/dashboard/city-intelligence", icon: BrainCircuit, label: "City Intelligence" },
   { href: "/dashboard/futures", icon: CalendarRange, label: "Urban Futures" },
+  { href: "/dashboard/civic-operations", icon: Building2, label: "Civic Operations" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
