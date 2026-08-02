@@ -17,6 +17,7 @@ import {
   FileText,
   Compass,
   BrainCircuit,
+  CalendarRange,
   Sparkles,
   Settings,
   LogOut,
@@ -32,6 +33,7 @@ const navItems = [
   { href: "/dashboard/decision-studio", icon: Sparkles, label: "Decision Studio" },
   { href: "/dashboard/demo-guide", icon: Compass, label: "Demo Guide" },
   { href: "/dashboard/city-intelligence", icon: BrainCircuit, label: "City Intelligence" },
+  { href: "/dashboard/futures", icon: CalendarRange, label: "Urban Futures" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
