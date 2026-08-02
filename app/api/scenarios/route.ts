@@ -5,7 +5,22 @@
 // ============================================================
 
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+type ScenarioWithZone = {
+  id: string;
+  zoneId: string;
+  action: string;
+  prompt: string;
+  parsedIntent: string;
+  baseMetrics: Prisma.JsonValue;
+  newMetrics: Prisma.JsonValue;
+  deltas: Prisma.JsonValue;
+  insights: Prisma.JsonValue;
+  createdAt: Date;
+  zone: { name: string };
+};
 
 export async function GET() {
   try {
@@ -27,7 +42,7 @@ export async function GET() {
       },
     });
 
-    const data = scenarios.map((s) => ({
+    const data = (scenarios as ScenarioWithZone[]).map((s) => ({
       id: s.id,
       zoneId: s.zoneId,
       zoneName: s.zone.name,
