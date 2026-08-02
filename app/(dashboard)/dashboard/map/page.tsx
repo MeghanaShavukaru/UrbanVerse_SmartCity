@@ -45,9 +45,8 @@ export default function MapPage() {
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("split");
-  const [mapProvider, setMapProvider] = useState<MapProvider>(
-    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? "google" : "leaflet"
-  );
+  // Keep the built-in map as the reliable default. Google Maps is optional.
+  const [mapProvider, setMapProvider] = useState<MapProvider>("leaflet");
   const hasGoogleMaps = Boolean(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   const handleZoneSelect = useCallback((zone: Zone) => {
