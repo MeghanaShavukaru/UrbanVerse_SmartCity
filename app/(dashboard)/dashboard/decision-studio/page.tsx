@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -12,6 +12,8 @@ import {
   MapPin,
   MessageCircle,
   Minimize2,
+  Mic,
+  MicOff,
   ShieldAlert,
   Sparkles,
   Users,
@@ -96,12 +98,17 @@ const citizenPulse = [
   { persona: "Senior resident", sentiment: "Supportive", message: "Shaded walks and closer transit make everyday services easier to reach.", color: "hsl(217 91% 55%)" },
 ];
 
+type SpeechRecognitionLike = { continuous: boolean; interimResults: boolean; lang: string; start: () => void; stop: () => void; onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null; onend: (() => void) | null; };
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
 export default function DecisionStudioPage() {
   const [proposal, setProposal] = useState("Improve the journey between the Railway Hub and nearby homes without increasing emissions.");
   const [zoneId, setZoneId] = useState("ZONE_RAILWAY");
   const [selectedId, setSelectedId] = useState("balanced");
   const [briefReady, setBriefReady] = useState(false);
   const [judgeMode, setJudgeMode] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   const zone = useMemo(() => ZONES.find((item) => item.id === zoneId) ?? ZONES[0], [zoneId]);
   const selected = options.find((option) => option.id === selectedId) ?? options[0];
@@ -114,6 +121,18 @@ export default function DecisionStudioPage() {
     }
     await document.documentElement.requestFullscreen?.().catch(() => undefined);
     setJudgeMode(true);
+  };
+
+  const handleVoiceProposal = () => {
+    if (isListening) return recognitionRef.current?.stop();
+    const browserWindow = window as Window & { SpeechRecognition?: SpeechRecognitionConstructor; webkitSpeechRecognition?: SpeechRecognitionConstructor };
+    const Recognition = browserWindow.SpeechRecognition ?? browserWindow.webkitSpeechRecognition;
+    if (!Recognition) return;
+    const recognition = new Recognition();
+    recognition.continuous = false; recognition.interimResults = false; recognition.lang = "en-US";
+    recognition.onresult = (event) => { let text = ""; for (let index = 0; index < event.results.length; index += 1) text += event.results[index][0]?.transcript ?? ""; setProposal((current) => `${current}${current ? " " : ""}${text.trim()}`); setBriefReady(false); };
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition; setIsListening(true); recognition.start();
   };
 
   return (
@@ -140,7 +159,7 @@ export default function DecisionStudioPage() {
       <section className="rounded-2xl p-5" style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}>
         <div className="flex items-center gap-2 mb-4"><span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white" style={{ background: "hsl(var(--primary))" }}>1</span><h3 className="font-semibold">Proposal Copilot</h3><span className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>Frame the decision in plain English</span></div>
         <div className="grid gap-3 lg:grid-cols-[1fr_260px_auto]">
-          <textarea value={proposal} onChange={(event) => { setProposal(event.target.value); setBriefReady(false); }} rows={2} className="w-full resize-none rounded-xl px-4 py-3 text-sm outline-none" style={{ background: "hsl(var(--muted))", border: "1px solid hsl(var(--border))" }} />
+          <div className="relative"><textarea value={proposal} onChange={(event) => { setProposal(event.target.value); setBriefReady(false); }} rows={2} className="w-full resize-none rounded-xl px-4 py-3 pr-11 text-sm outline-none" style={{ background: "hsl(var(--muted))", border: "1px solid hsl(var(--border))" }} /><button type="button" onClick={handleVoiceProposal} aria-label={isListening ? "Stop voice input" : "Explain proposal by voice"} title={isListening ? "Stop listening" : "Explain proposal by voice"} className="absolute bottom-2 right-2 rounded-lg p-2" style={{ background: isListening ? "hsl(0 84% 60% / 0.15)" : "hsl(var(--primary) / 0.12)", color: isListening ? "hsl(0 84% 60%)" : "hsl(var(--primary))" }}>{isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}</button></div>
           <select value={zoneId} onChange={(event) => { setZoneId(event.target.value); setBriefReady(false); }} className="rounded-xl px-3 text-sm outline-none" style={{ background: "hsl(var(--muted))", border: "1px solid hsl(var(--border))" }}>
             {ZONES.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
