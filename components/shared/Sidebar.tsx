@@ -16,6 +16,7 @@ import {
   History,
   FileText,
   Compass,
+  BrainCircuit,
   Sparkles,
   Settings,
   LogOut,
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/dashboard/reports", icon: FileText, label: "Reports" },
   { href: "/dashboard/decision-studio", icon: Sparkles, label: "Decision Studio" },
   { href: "/dashboard/demo-guide", icon: Compass, label: "Demo Guide" },
+  { href: "/dashboard/city-intelligence", icon: BrainCircuit, label: "City Intelligence" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
