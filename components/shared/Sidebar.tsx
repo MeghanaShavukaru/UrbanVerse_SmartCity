@@ -49,9 +49,9 @@ export function Sidebar() {
       initial={false}
       animate={{ width: collapsed ? 72 : 240 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="relative flex flex-col h-full overflow-hidden"
+      className="relative flex flex-col h-full overflow-hidden shadow-2xl"
       style={{
-        background: "hsl(var(--sidebar))",
+        background: "linear-gradient(180deg, oklch(0.115 0.03 255), oklch(0.08 0.02 255))",
         borderRight: "1px solid hsl(var(--sidebar-border))",
         flexShrink: 0,
       }}
@@ -61,7 +61,7 @@ export function Sidebar() {
         style={{ borderBottom: "1px solid hsl(var(--sidebar-border))" }}>
         <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
           style={{ background: "linear-gradient(135deg, hsl(217 91% 60%), hsl(142 71% 45%))" }}>
-          🏙️
+          <span style={{ animation: "urban-pulse 2.8s infinite" }}>🏙️</span>
         </div>
         <AnimatePresence>
           {!collapsed && (

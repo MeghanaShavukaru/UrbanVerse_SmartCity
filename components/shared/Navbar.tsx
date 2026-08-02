@@ -25,9 +25,10 @@ export function Navbar({ title = "Dashboard", subtitle }: NavbarProps) {
     <header
       className="flex items-center justify-between px-6 py-3 flex-shrink-0"
       style={{
-        background: "hsl(var(--card))",
+        background: "oklch(0.18 0.03 255 / 0.78)",
+        backdropFilter: "blur(18px)",
         borderBottom: "1px solid hsl(var(--border))",
-        height: "60px",
+        height: "68px",
       }}
     >
       {/* Left: Page title */}
