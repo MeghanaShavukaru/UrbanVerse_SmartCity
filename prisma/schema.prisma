@@ -1,0 +1,79 @@
+// prisma/schema.prisma — Prisma v7 format (no url in datasource)
+// Connection URL is handled by prisma.config.ts
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String     @id @default(cuid())
+  firebaseUid String     @unique
+  email       String     @unique
+  name        String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  scenarios   Scenario[]
+
+  @@map("users")
+}
+
+model Zone {
+  id          String     @id
+  name        String
+  description String?
+  population  Int
+  createdAt   DateTime   @default(now())
+  scenarios   Scenario[]
+
+  @@map("zones")
+}
+
+model Scenario {
+  id           String   @id @default(cuid())
+  userId       String
+  zoneId       String
+  action       String
+  prompt       String
+  parsedIntent String
+  baseMetrics  Json
+  newMetrics   Json
+  deltas       Json
+  insights     Json
+  createdAt    DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  zone    Zone     @relation(fields: [zoneId], references: [id])
+  events  Event[]
+  reports Report[]
+
+  @@map("scenarios")
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  scenarioId String
+  type       String
+  zoneId     String
+  payload    Json?
+  createdAt  DateTime @default(now())
+
+  scenario Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  scenarioId String
+  userId     String
+  title      String
+  createdAt  DateTime @default(now())
+
+  scenario Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
