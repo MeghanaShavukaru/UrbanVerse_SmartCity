@@ -5,8 +5,15 @@
 // ============================================================
 
 import { NextResponse } from "next/server";
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
 
 type ScenarioWithZone = {
   id: string;
@@ -14,10 +21,10 @@ type ScenarioWithZone = {
   action: string;
   prompt: string;
   parsedIntent: string;
-  baseMetrics: Prisma.JsonValue;
-  newMetrics: Prisma.JsonValue;
-  deltas: Prisma.JsonValue;
-  insights: Prisma.JsonValue;
+  baseMetrics: JsonValue;
+  newMetrics: JsonValue;
+  deltas: JsonValue;
+  insights: JsonValue;
   createdAt: Date;
   zone: { name: string };
 };
